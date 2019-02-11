@@ -1,0 +1,42 @@
+* {
+  font-family: sans-serif;
+}
+
+.user-icon {
+  display: block;
+  width: 40px;
+  height: 40px;
+}
+
+.uset-element-wrap {
+  display: flex;
+  position: relative;
+  top: 50%;
+  justify-content: left;
+
+  align-items: center;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.wrap-user-name {
+  padding-left: 15px;
+}
+
+.user-name {
+  font-size: 12px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  height: 18px;
+  line-height: 18px;
+}
+
+.user-works_tatus {
+  display: inline;
+  font-size: 10px;
+  line-height: 18px;
+}
