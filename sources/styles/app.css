@@ -40,3 +40,52 @@
   font-size: 10px;
   line-height: 18px;
 }
+
+.webix_view.user-info-template {
+	border-right-color: #fff;
+}
+
+.user-info-block__name-text {
+	font-size: 20px;
+	text-align: left;
+}
+
+.user-info-wrap {
+	display: flex;
+	justify-content: left;
+}
+
+.user-info-wrap__photo {
+	display: block;
+	height: 150px;
+	margin: 0;
+}
+
+.user-info-wrap__status {
+	font-size: 16px;
+	text-align: center;
+}
+
+.user-info-wrap__info-list {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	list-style: none;
+	height: 150px;
+	min-width: 300px;
+}
+
+.user-info-wrap__info-list-item {
+	display: flex;
+	justify-content: left;
+	padding: 10px 10px 0;
+}
+
+.contact-icon {
+	font-size: 18px;
+}
+
+.contact-name {
+	margin-left: 5px;
+	font-size: 15px;
+}
