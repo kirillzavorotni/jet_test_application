@@ -69,6 +69,7 @@ export default class userInfoTplView extends JetView {
 			// this.getParam("id") - NOT WORKING
 			const parentView = this.getParentView();
 			const id = parentView.getParam("id");
+			
 			const item = webix.copy(userContacts.getItem(id));
 			item.Status = userStatuses.getItem(item.StatusID).Value;
 			this.$$("userInfoTemplate").parse(item);
