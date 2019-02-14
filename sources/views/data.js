@@ -44,8 +44,7 @@ export default class ActiveView extends JetView {
 					],
 					onClick: {
 						"editElement": function (e, id) {
-
-							const tableElem = this.getItem(id);
+							let tableElem = this.getItem(id);
 							this.$scope.window.showWindow(tableElem, "editing", buttonSave, headEdit);
 						},
 						"deleteElement": function (e, id) {
@@ -69,7 +68,7 @@ export default class ActiveView extends JetView {
 	init() {
 		userActivity.waitData.then(() => {
 			this.$$("active-table").sync(userActivity);
+			this.window = this.ui(UserInfoFormView);
 		});
-		this.window = this.ui(UserInfoFormView);
 	}
 }

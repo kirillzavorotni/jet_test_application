@@ -83,19 +83,22 @@ export default class UserInfoWindowFormView extends JetView {
 								width: 130,
 								click: () => {
 									if (this.$$("userForm").validate()) {
-
 										const formValues = this.$$("userForm").getValues();
+										// for correct working
 										const format1 = webix.Date.dateToStr("%Y-%m-%d");
 										const format2 = webix.Date.dateToStr("%H:%i");
+										const format3 = webix.Date.strToDate("%Y-%m-%d %H:%i");
 										const date = format1(formValues.Date);
 										const time = format2(formValues.Time);
 										formValues.DueDate = date + " " + time;
-
+										formValues.DueDate = format3(formValues.DueDate);
+										//
 										if (this._action === "editing") {
 											userActivity.updateItem(formValues.id, formValues);
 										} else {
 											userActivity.add(formValues);
 										}
+
 										this.$$("activityWindow").hide();
 									}
 								}
@@ -116,6 +119,8 @@ export default class UserInfoWindowFormView extends JetView {
 					"Details": webix.rules.isNotEmpty,
 					"TypeID": webix.rules.isNotEmpty,
 					"ContactID": webix.rules.isNotEmpty,
+					"Date": webix.rules.isNotEmpty,
+					"Time": webix.rules.isNotEmpty,
 				},
 			}
 		};
@@ -123,6 +128,7 @@ export default class UserInfoWindowFormView extends JetView {
 	}
 
 	showWindow(elem, action, buttonName, headText) {
+
 		this._buttonName = buttonName;
 		this._action = action;
 		this._headText = headText;
@@ -136,12 +142,8 @@ export default class UserInfoWindowFormView extends JetView {
 		this.$$("addSaveButton").refresh();
 
 		if (this._elem) {
-			const format = webix.Date.dateToStr("%d-%m-%Y %H:%i");
-			this._elem.DueDate = format(this._elem.DueDate);
-			this._elem.Date = this._elem.DueDate;
-			this._elem.Time = this._elem.DueDate;
-			this.$$("userForm").setValues(this._elem);
 			this.getRoot().show();
+			this.$$("userForm").setValues(this._elem);
 		} else {
 			this.getRoot().show();
 		}
