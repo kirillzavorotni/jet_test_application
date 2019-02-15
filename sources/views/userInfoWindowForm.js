@@ -99,7 +99,7 @@ export default class UserInfoWindowFormView extends JetView {
 											userActivity.add(formValues);
 										}
 										
-										this.$$("userForm").validate()
+										this.$$("userForm").validate();
 										this.$$("userForm").clear();
 										this.$$("activityWindow").hide();
 									}
