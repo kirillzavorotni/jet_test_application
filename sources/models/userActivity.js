@@ -5,7 +5,7 @@ export const userActivity = new webix.DataCollection({
 	url: "http://localhost:8096/api/v1/activities/",
 	save: "rest->http://localhost:8096/api/v1/activities/",
 	scheme: {
-		$init: function (obj) {
+		$change: function (obj) {
 			obj.DueDate = format1(obj.DueDate);
 			obj.Date = webix.Date.copy(obj.DueDate);
 			obj.Time = webix.Date.copy(obj.DueDate);
@@ -14,6 +14,6 @@ export const userActivity = new webix.DataCollection({
 			obj.DueDate = format2(obj.DueDate);
 			delete obj.Time;
 			delete obj.Date;
-		},
-	},
+		}
+	}
 });

@@ -30,7 +30,7 @@ export default class ActivitiesView extends JetView {
 					columns: [
 						{ id: "State", header: "", template: "{common.checkbox()}", checkValue: "Open", uncheckValue: "Close", sort: "text", width: 36 },
 						{ id: "TypeID", header: ["Active type", { content: "selectFilter" }], collection: userActivityType, sort: "text", width: 100 },
-						{ id: "DueDate", header: ["Due date", { content: "datepickerFilter", inputConfig:{ timepicker: true } }], width: 150, format: webix.Date.dateToStr("%d-%m-%Y %H:%i"), sort: "date" },
+						{ id: "DueDate", header: ["Due date", { content: "datepickerFilter", inputConfig: { timepicker: true } }], width: 150, format: webix.Date.dateToStr("%d-%m-%Y %H:%i"), sort: "date" },
 						{ id: "Details", header: ["Details", { content: "textFilter" }], width: 300, fillspace: true, sort: "text" },
 						{ id: "ContactID", header: ["Contact", { content: "selectFilter" }], width: 200, collection: userContacts, sort: "text" },
 						{ template: "<span class='webix_icon wxi-pencil editElement'></span>", width: 50 },
@@ -61,9 +61,7 @@ export default class ActivitiesView extends JetView {
 	}
 
 	init() {
-		userActivity.waitData.then(() => {
-			this.$$("active-table").sync(userActivity);
-			this.window = this.ui(UserInfoFormView);
-		});
+		this.$$("active-table").sync(userActivity);
+		this.window = this.ui(UserInfoFormView);
 	}
 }

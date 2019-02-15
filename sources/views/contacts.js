@@ -21,7 +21,6 @@ export default class ContactsView extends JetView {
 			type: {
 				height: 60,
 			},
-			autoheight: false,
 			on: {
 				onAfterSelect: (id) => {
 					this.setParam("id", id, true);

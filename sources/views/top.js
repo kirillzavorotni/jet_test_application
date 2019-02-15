@@ -13,10 +13,10 @@ export default class TopView extends JetView {
 				{ value: "Settings", id: "settings", icon: "wxi-pencil" }
 			],
 			on: {
-				onAfterSelect: (id) => {
-					const header = id[0].toUpperCase() + id.slice(1);
-					this.$$("header").define({ template: header });
-					this.$$("header").refresh();
+				onAfterSelect: function(id) {
+					const header =this.$scope.$$("header");
+					header.define({ template: this.getItem(id).value });
+					header.refresh();
 				}
 			},
 		};
@@ -26,7 +26,7 @@ export default class TopView extends JetView {
 				{ localId: "header", template: "Contacts", type: "header" },
 				{
 					cols: [
-						{ rows: [menu] },
+						menu,
 						{ $subview: true },
 					]
 				},

@@ -67,9 +67,11 @@ export default class userInfoTplView extends JetView {
 			userStatuses.waitData
 		]).then(() => {
 			const id = this.getParam("id", true);
-			const item = webix.copy(userContacts.getItem(id));
-			item.Status = userStatuses.getItem(item.StatusID).Value;
-			this.$$("userInfoTemplate").parse(item);
+			if (id && userContacts.exists(id)) {
+				const item = webix.copy(userContacts.getItem(id));
+				item.Status = userStatuses.getItem(item.StatusID).Value;
+				this.$$("userInfoTemplate").parse(item);
+			}
 		});
 	}
 }
