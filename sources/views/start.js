@@ -3,7 +3,6 @@ import { userContacts } from "models/userContacts";
 
 export default class StartView extends JetView {
 	config() {
-
 		const userList = {
 			view: "list",
 			localId: "userList",

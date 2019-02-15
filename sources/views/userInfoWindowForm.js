@@ -11,7 +11,7 @@ export default class UserInfoWindowFormView extends JetView {
 			localId: "activityWindow",
 			head: {
 				localId: "windowHeader",
-				template: "Add (*edit) activity",
+				template: "Add",
 			},
 			width: 500,
 			height: 400,
@@ -79,7 +79,7 @@ export default class UserInfoWindowFormView extends JetView {
 								view: "button",
 								localId: "addSaveButton",
 								type: "form",
-								label: "Add (*save)",
+								label: "Add",
 								width: 130,
 								click: () => {
 									if (this.$$("userForm").validate()) {
@@ -93,12 +93,14 @@ export default class UserInfoWindowFormView extends JetView {
 										formValues.DueDate = date + " " + time;
 										formValues.DueDate = format3(formValues.DueDate);
 										//
-										if (this._action === "editing") {
+										if (this._elem) {
 											userActivity.updateItem(formValues.id, formValues);
 										} else {
 											userActivity.add(formValues);
 										}
-
+										
+										this.$$("userForm").validate()
+										this.$$("userForm").clear();
 										this.$$("activityWindow").hide();
 									}
 								}
@@ -109,6 +111,7 @@ export default class UserInfoWindowFormView extends JetView {
 								width: 130,
 								click: () => {
 									this.$$("userForm").clear();
+									this.$$("userForm").clearValidation();
 									this.$$("activityWindow").hide();
 								}
 							},
@@ -127,21 +130,17 @@ export default class UserInfoWindowFormView extends JetView {
 
 	}
 
-	showWindow(elem, action, buttonName, headText) {
-
-		this._buttonName = buttonName;
-		this._action = action;
-		this._headText = headText;
+	showWindow(elem) {
+		const newLabelText = "Edit";
 		this._elem = elem;
 
-		this.$$("windowHeader").define("template", this._headText);
-		this.$$("windowHeader").refresh();
-		this.$$("userForm").clear();
-
-		this.$$("addSaveButton").define("label", buttonName);
-		this.$$("addSaveButton").refresh();
-
 		if (this._elem) {
+			this.$$("windowHeader").define("template", newLabelText);
+			this.$$("windowHeader").refresh();
+			
+			this.$$("addSaveButton").define("label", newLabelText);
+			this.$$("addSaveButton").refresh();
+
 			this.getRoot().show();
 			this.$$("userForm").setValues(this._elem);
 		} else {
