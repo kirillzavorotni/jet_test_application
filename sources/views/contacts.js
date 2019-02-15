@@ -1,7 +1,7 @@
 import { JetView } from "webix-jet";
 import { userContacts } from "models/userContacts";
 
-export default class StartView extends JetView {
+export default class ContactsView extends JetView {
 	config() {
 		const userList = {
 			view: "list",
