@@ -18,7 +18,7 @@ export default class ActivitiesView extends JetView {
 							icon: "wxi-plus-square",
 							width: 200,
 							click: () => {
-								this.window.showWindow();
+								this.window.showWindow("", "", "");
 							}
 						},
 					],
@@ -39,7 +39,7 @@ export default class ActivitiesView extends JetView {
 					onClick: {
 						"editElement": function (e, id) {
 							let tableElem = this.getItem(id);
-							this.$scope.window.showWindow(tableElem);
+							this.$scope.window.showWindow(tableElem, "", "");
 						},
 						"deleteElement": function (e, id) {
 							webix.confirm({
@@ -61,6 +61,7 @@ export default class ActivitiesView extends JetView {
 	}
 
 	init() {
+		userActivity.filter();
 		this.$$("active-table").sync(userActivity);
 		this.window = this.ui(UserInfoFormView);
 	}

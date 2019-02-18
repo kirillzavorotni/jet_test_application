@@ -11,7 +11,7 @@ export default class ContactsView extends JetView {
 			scroll: true,
 			template: `
 				<div class="uset-element-wrap">
-					<img src='https://cdn.iconscout.com/icon/free/png-256/user-avatar-contact-portfolio-personal-portrait-profile-6-5623.png' class='user-icon' alt='User Image'>
+					<img src='#Photo#' class='user-icon' alt='User Image'>
 					<div class="wrap-user-name">
 						<p class="user-name">#FirstName# #LastName#</p>
 						<span class="user-works_tatus">#Job#</span>
@@ -22,7 +22,7 @@ export default class ContactsView extends JetView {
 				height: 60,
 			},
 			on: {
-				onAfterSelect: (id) => {
+				"onAfterSelect": (id) => {
 					this.setParam("id", id, true);
 				},
 			},
@@ -30,26 +30,46 @@ export default class ContactsView extends JetView {
 
 		return {
 			cols: [
-				userList,
-				{ $subview: "userInfoTpl", name: "infoTpl" },
+				{
+					rows: [
+						userList,
+						{
+							view: "button",
+							localId: "addButton",
+							label: "Add contact",
+							type: "iconButton",
+							icon: "wxi-plus",
+							click: () => {
+								if (this.getUrl().length < 3) {
+									this.show("./userForm/add");
+								}
+							}
+						},
+					],
+				},
+				{ $subview: true },
 			],
 		};
 	}
 
-	init() {
+	init(view, url) {
 		this.$$("userList").sync(userContacts);
+		userContacts.waitData.then(() => {
+			if (url.length < 2) {
+				this.show("./userInfoTpl");
+			}
+		});
 	}
 
 	urlChange() {
 		userContacts.waitData.then(() => {
-			const id = this.getParam("id");
-
-			if (id && this.$$("userList").exists(id)) {
-				this.$$("userList").select(id);
-			} else {
-				this.$$("userList").select(userContacts.getFirstId());
-			}
-			
+				const id = this.getParam("id");
+				if (id && userContacts.exists(id)) {
+					this.$$("userList").select(id);
+				} else {
+					this.$$("userList").select(userContacts.getFirstId());
+					this.setParam("id", userContacts.getFirstId(), true);
+				}
 		});
 	}
 }
