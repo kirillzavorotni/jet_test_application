@@ -86,7 +86,8 @@ export default class UserInfoWindowFormView extends JetView {
 										const formValues = this.$$("userForm").getValues();
 										const hours = formValues.Time.getHours();
 										const minutes = formValues.Time.getMinutes();
-										formValues.DueDate = new Date(formValues.Date.setHours(hours, minutes));
+										formValues.Date.setHours(hours, minutes);
+										formValues.DueDate = formValues.Date;
 
 										if (this._elem) {
 											userActivity.updateItem(formValues.id, formValues);
