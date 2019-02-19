@@ -2,9 +2,18 @@
   font-family: sans-serif;
 }
 
+.header-app {
+	font-size: 28px;
+	padding-left: 126px;
+}
+
 .user-icon {
   display: block;
   width: 40px;
+}
+
+.formLabelStyle {
+	font-size: 10px;
 }
 
 .uset-element-wrap {
@@ -21,6 +30,10 @@
   transform: translateY(-50%);
 }
 
+.userFormbutton button {
+	font-size: 9px;
+}
+
 .wrap-user-name {
   padding-left: 15px;
 }
@@ -32,6 +45,10 @@
   padding: 0;
   height: 18px;
   line-height: 18px;
+}
+
+.userFormStyle label {
+	font-size: 11px;
 }
 
 .user-works_tatus {

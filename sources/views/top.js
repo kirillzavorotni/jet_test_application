@@ -23,7 +23,7 @@ export default class TopView extends JetView {
 
 		const ui = {
 			rows: [
-				{ localId: "header", template: "Contacts", type: "header" },
+				{ localId: "header", template: "Contacts", type: "header", css: "header-app" },
 				{
 					cols: [
 						menu,

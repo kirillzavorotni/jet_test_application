@@ -8,7 +8,6 @@ import UserInfoFormView from "views/userInfoWindowForm";
 
 export default class userInfoTplView extends JetView {
 	config() {
-
 		const activityTable = {
 			id: "activityCell",
 			rows: [
@@ -55,7 +54,9 @@ export default class userInfoTplView extends JetView {
 							type: "iconButton",
 							icon: "wxi-plus",
 							click: () => {
-								this.window.showWindow("", true, this.getParam("id", true));
+								if (this.getParam("id", true)) {
+									this.window.showWindow("", true, this.getParam("id", true));
+								}
 							},
 							width: 200,
 						}
@@ -88,8 +89,6 @@ export default class userInfoTplView extends JetView {
 									if (result) {
 										userFiles.remove(id);
 									}
-									console.log(id);
-									console.log(userFiles.data.pull);
 								}
 							});
 							return false;
@@ -107,22 +106,25 @@ export default class userInfoTplView extends JetView {
 							localId: "uploadBtn",
 							label: "Upload file",
 							autosend: false,
-							multiple: false,
 							on: {
 								onBeforeFileAdd: (upload) => {
-									const file = upload.file;
-									const reader = new FileReader();
-									reader.onload = (event) => {
-										const elem = {
-											ContactID: this.getParam("id", true),
-											name: upload.name,
-											size: upload.sizetext,
-											dataChange: file.lastModifiedDate,
+									if (this.getParam("id", true)) {
+										const file = upload.file;
+										const reader = new FileReader();
+										reader.onload = () => {
+
+											const elem = {
+												ContactID: this.getParam("id", true),
+												name: upload.name,
+												size: upload.sizetext,
+												dataChange: file.lastModifiedDate,
+											};
+
+											userFiles.add(elem);
 										};
-										userFiles.add(elem);
-									};
-									reader.readAsDataURL(file);
-									return false;
+										reader.readAsDataURL(file);
+										return false;
+									}
 								}
 							}
 						},
@@ -133,81 +135,107 @@ export default class userInfoTplView extends JetView {
 		};
 
 		return {
-			rows: [
+			cols: [
 				{
-					cols: [
+					width: 800,
+					rows: [
 						{
-							view: "template",
-							localId: "userInfoTemplate",
-							template: "",
-							css: "user-info-template",
+							cols: [
+								{
+									view: "template",
+									localId: "userInfoTemplate",
+									template: "",
+									css: "user-info-template",
+								},
+								{
+									rows: [
+										{
+											cols: [
+												{
+													view: "button",
+													label: "Delete",
+													type: "icon",
+													icon: "wxi-trash",
+													width: 100,
+													click: () => {
+														if (userContacts.count()) {
+															webix.confirm({
+																title: "Delete",
+																text: "Do You want to delete this contact?",
+																type: "confirm-warning",
+																callback: (result) => {
+																	if (result) {
+																		const userActids = [];
+																		const userFilesIds = [];
+
+																		const curId = this.getParam("id", true);
+																		userContacts.remove(curId);
+
+																		userFiles.data.each(function (obj) {
+																			if (obj.ContactID == curId) {
+																				userFilesIds.push(obj.id);
+																			}
+																		});
+
+																		userActivity.data.each(function (obj) {
+																			if (obj.ContactID == curId) {
+																				userActids.push(obj.id);
+																			}
+																		});
+
+																		userFiles.remove(userFilesIds);
+																		userActivity.remove(userActids);
+
+																		const firstId = userContacts.getFirstId();
+																		if (firstId) {
+																			this.show(`/top/contacts?id=${firstId}/${this.getUrl()[0].page}`);
+																		} else {
+																			this.show("/top/contacts/userInfoTpl");
+																		}
+																	}
+																}
+															});
+														}
+													},
+												},
+												{
+													view: "button",
+													label: "Edit",
+													type: "iconButton",
+													icon: "wxi-pencil",
+													width: 100,
+													click: () => {
+														if (userContacts.count()) {
+															this.show("./userForm/edit");
+														}
+													}
+												},
+											],
+										},
+										{ view: "spacer" }
+									],
+								},
+							]
 						},
 						{
 							rows: [
 								{
-									cols: [
-										{
-											view: "button",
-											label: "Delete",
-											type: "icon",
-											icon: "wxi-trash",
-											width: 100,
-											click: () => {
-												if (userContacts.count()) {
-													webix.confirm({
-														title: "Delete",
-														text: "Do You want to delete this contact?",
-														type: "confirm-warning",
-														callback: (result) => {
-															if (result) {
-																userContacts.remove(this.getParam("id", true));
-																const firstId = userContacts.getFirstId()
-																if (firstId) {
-																	this.show(`/top/contacts?id=${firstId}/${this.getUrl()[0].page}`);
-																} else {
-																	this.show("/top/contacts/userInfoTpl");
-																}
-															}
-														}
-													});
-												}
-											},
-										},
-										{
-											view: "button",
-											label: "Edit",
-											type: "iconButton",
-											icon: "wxi-pencil",
-											width: 100,
-											click: () => {
-												if (userContacts.count()) {
-													this.show("./userForm/edit");
-												}
-											}
-										},
+									view: "tabbar", value: "activityCell", multiview: true, options: [
+										{ value: "Activity", id: "activityCell" },
+										{ value: "Files", id: "filesCell" },
+									]
+								},
+								{
+									cells: [
+										activityTable,
+										fileTable
 									],
 								},
-								{ view: "spacer" }
-							],
-						},
-					]
-				},
-				{
-					rows: [
-						{
-							view: "tabbar", value: 'activityCell', multiview: true, options: [
-								{ value: 'Activity', id: 'activityCell' },
-								{ value: 'Files', id: 'filesCell' },
-							]
-						},
-						{
-							cells: [
-								activityTable,
-								fileTable
 							],
 						},
 					],
 				},
+				{ view: "spacer" },
 			],
 		};
 	}
@@ -226,12 +254,12 @@ export default class userInfoTplView extends JetView {
 					<li class="user-info-wrap__info-list-item"><span class="mdi mdi-skype contact-icon"></span> <span class="contact-name">#Skype#</span></li>
 					<li class="user-info-wrap__info-list-item"><span class="mdi mdi-monitor contact-icon"></span> <span class="contact-name">#Job#</span></li>
 					<li class="user-info-wrap__info-list-item"><span class="mdi mdi-toolbox contact-icon"></span> <span class="contact-name">#Company#</span></li>
-					<li class="user-info-wrap__info-list-item"><span class="mdi mdi-bell contact-icon"></span> <span class="contact-name">#Birthday#</span></li>
+					<li class="user-info-wrap__info-list-item"><span class="mdi mdi-bell contact-icon"></span> <span class="contact-name">#birthTPL#</span></li>
 					<li class="user-info-wrap__info-list-item"><span class="mdi mdi-map-marker contact-icon"></span> <span class="contact-name">#Address#</span></li>
 				</ul>
 			</div>
 		</div>
-	`
+	`;
 	}
 
 	urlChange() {
@@ -239,16 +267,16 @@ export default class userInfoTplView extends JetView {
 			userContacts.waitData,
 			userStatuses.waitData,
 			userActivity,
-			userActivityType
 		]).then(() => {
 			if (userContacts.count()) {
 				const id = this.getParam("id", true);
 				if (id && userContacts.exists(id)) {
-					this.$$("userInfoTemplate").define("template", this.setTemplate());
-					this.$$("userInfoTemplate").refresh();
 					const item = webix.copy(userContacts.getItem(id));
 					item.Status = userStatuses.getItem(item.StatusID).Value;
+
 					this.$$("userInfoTemplate").parse(item);
+					this.$$("userInfoTemplate").define("template", this.setTemplate());
+					this.$$("userInfoTemplate").refresh();
 
 					userActivity.filter(function (obj) {
 						return obj.ContactID.toString() === id;
@@ -263,7 +291,6 @@ export default class userInfoTplView extends JetView {
 			} else {
 				this.$$("userInfoTemplate").define("template", "");
 				this.$$("userInfoTemplate").refresh();
-				this.show("/top/contacts/userInfoTpl");
 			}
 		});
 	}

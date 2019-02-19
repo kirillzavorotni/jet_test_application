@@ -7,11 +7,17 @@ export default class UserFormView extends JetView {
 	config() {
 		return {
 			rows: [
-				{ view: "template", localId: "formTitle", template: "Edit (*add) contact", type: "header", css: "userFormstyle" },
+				{ view: "template", localId: "formTitle", template: "Edit (*add) contact", type: "header", css: "header-app" },
 				{
 					view: "form",
 					localId: "contactForm",
 					autoheight: false,
+					elementsConfig: {
+						labelWidth: 75,
+						labelAlign: "right",
+						css: "formLabelStyle",
+					},
+					css: "userFormStyle",
 					elements: [
 						{
 							cols: [
@@ -47,6 +53,7 @@ export default class UserFormView extends JetView {
 										},
 									],
 									margin: 5,
+									width: 250,
 								},
 								{
 									rows: [
@@ -61,12 +68,13 @@ export default class UserFormView extends JetView {
 										},
 										{
 											cols: [
+												{ view: "spacer" },
 												{
 													localId: "userImgTemplate",
 													name: "Photo",
 													width: 225,
 													height: 225,
-													template: "<img src='#src#' class='user-info-form-img' alt='User Image'>",
+													template: "<img src='#src#' class='user-info-form-img' alt=''>",
 												},
 												{
 													rows: [
@@ -78,6 +86,7 @@ export default class UserFormView extends JetView {
 															autosend: false,
 															multiple: false,
 															name: "Photo",
+															css: "userFormbutton",
 															on: {
 																onBeforeFileAdd: (upload) => {
 																	const file = upload.file;
@@ -92,18 +101,19 @@ export default class UserFormView extends JetView {
 															}
 														},
 														{
-															view: "button", label: "Delete photo", click: () => {
+															view: "button", label: "Delete photo", css: "userFormbutton", click: () => {
 																this.$$("userImgTemplate").setValues({ src: "" });
 																this.$$("contactForm").setValues({ Photo: "" }, true);
 															}
 														},
 													],
-													width: 130,
+													width: 47,
 												},
 											],
 										},
 									],
 									margin: 5,
+									width: 350,
 								},
 							],
 						}
@@ -137,6 +147,8 @@ export default class UserFormView extends JetView {
 											const firstId = userContacts.getFirstId();
 											if (firstId) {
 												this.show(`/top/contacts?id=${firstId}/userInfoTpl`);
+											} else {
+												this.show("/top/contacts/userInfoTpl");
 											}
 										}
 									}
@@ -161,7 +173,7 @@ export default class UserFormView extends JetView {
 					],
 				}
 			],
-		}
+		};
 	}
 
 	init() {

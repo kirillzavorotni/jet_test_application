@@ -34,17 +34,22 @@ export default class ContactsView extends JetView {
 					rows: [
 						userList,
 						{
-							view: "button",
-							localId: "addButton",
-							label: "Add contact",
-							type: "iconButton",
-							icon: "wxi-plus",
-							click: () => {
-								if (this.getUrl().length < 3) {
-									this.show("./userForm/add");
-								}
-							}
-						},
+							cols: [
+								{ view: "spacer" },
+								{
+									view: "button",
+									width: 200,
+									localId: "addButton",
+									label: "Add contact",
+									type: "iconButton",
+									icon: "wxi-plus",
+									click: () => {
+										this.show("./userForm/add");
+									}
+								},
+								{ view: "spacer" },
+							],
+						}
 					],
 				},
 				{ $subview: true },
@@ -61,15 +66,17 @@ export default class ContactsView extends JetView {
 		});
 	}
 
-	urlChange() {
+	urlChange(view, url) {
 		userContacts.waitData.then(() => {
-				const id = this.getParam("id");
-				if (id && userContacts.exists(id)) {
-					this.$$("userList").select(id);
-				} else {
-					this.$$("userList").select(userContacts.getFirstId());
-					this.setParam("id", userContacts.getFirstId(), true);
-				}
+			const id = this.getParam("id");
+			if (id && userContacts.exists(id)) {
+				this.$$("userList").select(id);
+			} else if (userContacts.count()){
+				this.$$("userList").select(userContacts.getFirstId());
+				this.setParam("id", userContacts.getFirstId(), true);
+			} else if (url.length > 2 && url[2].page === "add") {
+				this.show("/top/contacts/userForm/add");
+			}
 		});
 	}
 }
