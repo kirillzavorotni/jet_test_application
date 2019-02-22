@@ -57,7 +57,8 @@ export default class UserInfoWindowFormView extends JetView {
 								view: "datepicker",
 								name: "Date",
 								label: "Date",
-								type: "date"
+								type: "date",
+								format: webix.Date.dateToStr("%d-%m-%Y"),
 							},
 							{
 								view: "datepicker",

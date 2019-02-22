@@ -28,7 +28,8 @@ export default class UserFormView extends JetView {
 											view: "datepicker",
 											name: "StartDate",
 											label: "Joining date",
-											type: "date"
+											type: "date",
+											format: webix.Date.dateToStr("%d-%m-%Y"),
 										},
 										{
 											view: "richselect",
@@ -64,6 +65,7 @@ export default class UserFormView extends JetView {
 											name: "Birthday",
 											label: "Birthday",
 											type: "date",
+											format: webix.Date.dateToStr("%d-%m-%Y"),
 										},
 										{
 											cols: [

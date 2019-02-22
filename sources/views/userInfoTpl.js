@@ -282,7 +282,7 @@ class ActivityTableView extends JetView {
 					columns: [
 						{ id: "State", header: "", template: "{common.checkbox()}", checkValue: "Open", uncheckValue: "Close", sort: "text", width: 36 },
 						{ id: "TypeID", header: ["", { content: "selectFilter" }], collection: userActivityType, sort: "text", width: 150 },
-						{ id: "DueDate", header: ["", { content: "datepickerFilter", inputConfig: { format: webix.Date.dateToStr("%d/%m/%Y") } }], width: 150, format: webix.Date.dateToStr("%d/%m/%Y"), sort: "date" },
+						{ id: "DueDate", header: ["", { content: "datepickerFilter", inputConfig: { format:webix.Date.dateToStr("%d-%m-%Y") } }], width: 150, format:webix.Date.dateToStr("%d-%m-%Y"), sort: "date" },
 						{ id: "Details", header: ["", { content: "textFilter" }], width: 200, fillspace: true, sort: "text" },
 						{ template: "<span class='webix_icon wxi-pencil editElement'></span>", width: 50 },
 						{ template: "<span class='webix_icon wxi-trash deleteElement'></span>", width: 50 },
