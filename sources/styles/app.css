@@ -66,6 +66,10 @@
 	text-align: left;
 }
 
+.webix_layout_line .template-style {
+	margin-left: 77px;
+}
+
 .user-info-wrap {
 	display: flex;
 	justify-content: left;

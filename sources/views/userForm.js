@@ -53,7 +53,6 @@ export default class UserFormView extends JetView {
 										},
 									],
 									margin: 5,
-									width: 250,
 								},
 								{
 									rows: [
@@ -69,7 +68,7 @@ export default class UserFormView extends JetView {
 										},
 										{
 											cols: [
-												{ view: "spacer" },
+												{ view: "spacer", width: 78 },
 												{
 													localId: "userImgTemplate",
 													name: "Photo",
