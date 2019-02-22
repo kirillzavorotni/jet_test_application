@@ -2,7 +2,6 @@ import { JetView } from "webix-jet";
 import { userContacts } from "models/userContacts";
 import { userStatuses } from "models/userStatuses";
 
-
 export default class UserFormView extends JetView {
 	config() {
 		return {
@@ -141,29 +140,28 @@ export default class UserFormView extends JetView {
 								{
 									view: "button", label: "Cancel", click: () => {
 										this.refreshForm();
-										if (this.getUrl()[1].page === "edit") {
-											this.show(`/top/contacts?id=${this.getParam("id", true)}/userInfoTpl`);
-										} else {
+										if (this.getParam("mode") === "add") {
 											const firstId = userContacts.getFirstId();
 											if (firstId) {
-												this.show(`/top/contacts?id=${firstId}/userInfoTpl`);
-											} else {
-												this.show("/top/contacts/userInfoTpl");
+												this.app.callEvent("setFirstIdParam");
 											}
 										}
+										this.app.callEvent("showTemplate");
+										this.app.callEvent("enableBtn");
 									}
 								},
 								{
 									view: "button", localId: "actionButton", label: "Add(*Save)", type: "form", click: () => {
 										if (this.$$("contactForm").validate()) {
 											const values = this.$$("contactForm").getValues();
-											if (this.getUrl()[1].page === "edit") {
+											if (this.getParam("mode") === "edit") {
 												userContacts.updateItem(values.id, values);
 											} else {
 												userContacts.add(values);
 											}
 											this.refreshForm();
-											this.show("userInfoTpl");
+											this.app.callEvent("showTemplate");
+											this.app.callEvent("enableBtn");
 										}
 									}
 								},
@@ -177,9 +175,10 @@ export default class UserFormView extends JetView {
 	}
 
 	init() {
+		this._parentParam = this.getParam("id", true);
 		userContacts.waitData.then(() => {
-			const url = this.getUrl();
-			if (url[1].page === "edit") {
+			if (this.getParam("mode") === "edit") {
+				this.app.callEvent("disableBtn");
 				this.editLabels("Edit");
 				const itemId = this.getParam("id", true);
 				const desItem = userContacts.getItem(itemId);
@@ -202,5 +201,12 @@ export default class UserFormView extends JetView {
 	refreshForm() {
 		this.$$("contactForm").clear();
 		this.$$("contactForm").clearValidation();
+	}
+
+	urlChange() {
+		if (this.getParam("id", true) != this._parentParam) {
+			this.app.callEvent("showTemplate");
+			this.app.callEvent("enableBtn");
+		}
 	}
 }

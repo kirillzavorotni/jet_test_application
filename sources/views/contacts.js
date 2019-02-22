@@ -9,15 +9,21 @@ export default class ContactsView extends JetView {
 			width: 270,
 			select: true,
 			scroll: true,
-			template: `
-				<div class="uset-element-wrap">
-					<img src='#Photo#' class='user-icon' alt='User Image'>
-					<div class="wrap-user-name">
-						<p class="user-name">#FirstName# #LastName#</p>
-						<span class="user-works_tatus">#Job#</span>
+			template: function (obj) {
+				let firstName = obj.FirstName ? obj.FirstName : "No name";
+				let lastName = obj.LastName ? obj.LastName : "No name";
+				let job = obj.Job ? obj.Job : "No Info";
+				let photo = obj.Photo ? obj.Photo : "https://cdn.iconscout.com/icon/free/png-256/user-avatar-contact-portfolio-personal-portrait-profile-6-5623.png";
+				return `
+					<div class="uset-element-wrap">
+						<img src='${photo}' class='user-icon' alt='User Image'>
+						<div class="wrap-user-name">
+							<p class="user-name">${firstName} ${lastName}</p>
+							<span class="user-works_tatus">${job}</span>
+						</div>
 					</div>
-				</div>
-			`,
+				`;
+			},
 			type: {
 				height: 60,
 			},
@@ -44,7 +50,7 @@ export default class ContactsView extends JetView {
 									type: "iconButton",
 									icon: "wxi-plus",
 									click: () => {
-										this.show("./userForm/add");
+										this.show("userForm?mode=add");
 									}
 								},
 								{ view: "spacer" },
@@ -59,23 +65,47 @@ export default class ContactsView extends JetView {
 
 	init(view, url) {
 		this.$$("userList").sync(userContacts);
+		if (url.length < 2) {
+			this.show("./userInfoTpl");
+		}
 		userContacts.waitData.then(() => {
-			if (url.length < 2) {
-				this.show("./userInfoTpl");
-			}
+			this.on(this.app, "disableBtn", () => {
+				this.$$("addButton").disable();
+			});
+
+			this.on(this.app, "enableBtn", () => {
+				this.$$("addButton").enable();
+			});
+
+			this.on(this.app, "setFirstIdParam", () => {
+				userContacts.waitData.then(() => {
+					const firstId = userContacts.getFirstId();
+					if (firstId) {
+						this.setParam("id", firstId, true);
+					}
+				});
+			});
+
+			this.on(this.app, "showTemplate", () => {
+				this.show("userInfoTpl");
+			});
+
+			this.on(webix.dp(userContacts), "onAfterInsert", (response) => {
+				this.$$("userList").select(response.id);
+			});
+
 		});
 	}
 
-	urlChange(view, url) {
+	urlChange() {
 		userContacts.waitData.then(() => {
 			const id = this.getParam("id");
-			if (id && userContacts.exists(id)) {
+			if (id && userContacts.exists(id) && !this.$$("userList").getSelectedId()) {
 				this.$$("userList").select(id);
-			} else if (userContacts.count()){
+			} else if (!id || !userContacts.exists(id)) {
 				this.$$("userList").select(userContacts.getFirstId());
-				this.setParam("id", userContacts.getFirstId(), true);
-			} else if (url.length > 2 && url[2].page === "add") {
-				this.show("/top/contacts/userForm/add");
+			} else if (id && userContacts.exists(id) && this.$$("userList").getSelectedId()) {
+				this.$$("userList").select(id);
 			}
 		});
 	}
