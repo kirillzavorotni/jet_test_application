@@ -66,6 +66,10 @@ export default class ContactsView extends JetView {
 	init() {
 		this.$$("userList").sync(userContacts);
 		userContacts.waitData.then(() => {
+			if (!this.getSubView()) {
+				this.show("./userInfoTpl");
+			}
+
 			this.on(this.app, "disableBtn", () => {
 				this.$$("addButton").disable();
 			});
@@ -96,9 +100,6 @@ export default class ContactsView extends JetView {
 
 	urlChange() {
 		userContacts.waitData.then(() => {
-			if (!this.getSubView()) {
-				this.show("./userInfoTpl");
-			}
 			const id = this.getParam("id");
 			if (id && userContacts.exists(id) && !this.$$("userList").getSelectedId()) {
 				this.$$("userList").select(id);
