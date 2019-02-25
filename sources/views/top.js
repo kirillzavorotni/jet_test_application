@@ -13,8 +13,8 @@ export default class TopView extends JetView {
 				{ value: "Settings", id: "settings", icon: "wxi-pencil" }
 			],
 			on: {
-				onAfterSelect: function(id) {
-					const header =this.$scope.$$("header");
+				onAfterSelect: function (id) {
+					const header = this.$scope.$$("header");
 					header.define({ template: this.getItem(id).value });
 					header.refresh();
 				}
@@ -23,7 +23,7 @@ export default class TopView extends JetView {
 
 		const ui = {
 			rows: [
-				{ localId: "header", template: "Contacts", type: "header" },
+				{ localId: "header", template: "Contacts", type: "header", css: "header-app" },
 				{
 					cols: [
 						menu,
@@ -35,6 +35,7 @@ export default class TopView extends JetView {
 
 		return ui;
 	}
+
 	init() {
 		this.use(plugins.Menu, "top:menu");
 	}

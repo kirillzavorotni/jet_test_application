@@ -2,10 +2,18 @@
   font-family: sans-serif;
 }
 
+.header-app {
+	font-size: 28px;
+	padding-left: 126px;
+}
+
 .user-icon {
   display: block;
   width: 40px;
-  height: 40px;
+}
+
+.formLabelStyle {
+	font-size: 10px;
 }
 
 .uset-element-wrap {
@@ -22,6 +30,10 @@
   transform: translateY(-50%);
 }
 
+.userFormbutton button {
+	font-size: 9px;
+}
+
 .wrap-user-name {
   padding-left: 15px;
 }
@@ -33,6 +45,10 @@
   padding: 0;
   height: 18px;
   line-height: 18px;
+}
+
+.userFormStyle label {
+	font-size: 11px;
 }
 
 .user-works_tatus {
@@ -50,6 +66,10 @@
 	text-align: left;
 }
 
+.webix_layout_line .template-style {
+	margin-left: 77px;
+}
+
 .user-info-wrap {
 	display: flex;
 	justify-content: left;
@@ -59,6 +79,20 @@
 	display: block;
 	height: 150px;
 	margin: 0;
+}
+
+.user-info-form-img {
+	position: relative;
+	display: block;
+	height: 200px;
+	margin: 0;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
 }
 
 .user-info-wrap__status {

@@ -5,7 +5,6 @@ import { userActivityType } from "models/userActivityType";
 
 export default class UserInfoWindowFormView extends JetView {
 	config() {
-
 		return {
 			view: "window",
 			localId: "activityWindow",
@@ -40,6 +39,7 @@ export default class UserInfoWindowFormView extends JetView {
 					},
 					{
 						view: "richselect",
+						localId: "chooseContactElem",
 						label: "Contact",
 						name: "ContactID",
 						suggest: {
@@ -48,6 +48,8 @@ export default class UserInfoWindowFormView extends JetView {
 								template: "#value#",
 							}
 						},
+						disabled: false,
+						value: "",
 					},
 					{
 						cols: [
@@ -55,7 +57,8 @@ export default class UserInfoWindowFormView extends JetView {
 								view: "datepicker",
 								name: "Date",
 								label: "Date",
-								type: "date"
+								type: "date",
+								format: webix.Date.dateToStr("%d-%m-%Y"),
 							},
 							{
 								view: "datepicker",
@@ -122,8 +125,10 @@ export default class UserInfoWindowFormView extends JetView {
 
 	}
 
-	showWindow(elem) {
+	showWindow(elem, chooseName, elemId) {
 		this._elem = elem;
+		this._chooseName = chooseName;
+		this._elemId = elemId;
 
 		if (this._elem) {
 			this.changeLabels("Edit");
@@ -132,6 +137,13 @@ export default class UserInfoWindowFormView extends JetView {
 			this.changeLabels("Add");
 		}
 
+		if (this._chooseName) {
+			this.chooseElement(this._chooseName);
+		}
+
+		if (this._elemId) {
+			this.setContact(this._elemId);
+		}
 		this.getRoot().show();
 	}
 
@@ -146,5 +158,15 @@ export default class UserInfoWindowFormView extends JetView {
 		this.$$("userForm").clearValidation();
 		this.$$("userForm").clear();
 		this.$$("activityWindow").hide();
+	}
+
+	chooseElement(chooseName) {
+		this.$$("chooseContactElem").define("disabled", chooseName);
+		this.$$("chooseContactElem").refresh();
+	}
+
+	setContact(id) {
+		this.$$("chooseContactElem").define("value", id);
+		this.$$("chooseContactElem").refresh();
 	}
 }
