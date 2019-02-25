@@ -8,6 +8,7 @@ import UserInfoFormView from "views/userInfoWindowForm";
 
 export default class userInfoTplView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		return {
 			rows: [
 				{
@@ -24,15 +25,15 @@ export default class userInfoTplView extends JetView {
 									cols: [
 										{
 											view: "button",
-											label: "Delete",
+											label: _("Delete"),
 											type: "icon",
 											icon: "wxi-trash",
 											width: 100,
 											click: () => {
 												if (userContacts.count()) {
 													webix.confirm({
-														title: "Delete",
-														text: "Do You want to delete this contact?",
+														title: _("Delete"),
+														text: _("Do You want to delete this contact?"),
 														type: "confirm-warning",
 														callback: (result) => {
 															if (result) {
@@ -71,7 +72,7 @@ export default class userInfoTplView extends JetView {
 										},
 										{
 											view: "button",
-											label: "Edit",
+											label: _("Edit"),
 											type: "iconButton",
 											icon: "wxi-pencil",
 											width: 100,
@@ -95,8 +96,8 @@ export default class userInfoTplView extends JetView {
 					rows: [
 						{
 							view: "tabbar", value: "activityCell", multiview: true, options: [
-								{ value: "Activity", id: "activityCell" },
-								{ value: "Files", id: "filesCell" },
+								{ value: _("Activity"), id: "activityCell" },
+								{ value: _("Files"), id: "filesCell" },
 							]
 						},
 						{
@@ -127,7 +128,12 @@ export default class userInfoTplView extends JetView {
 				const id = this.getParam("id", true);
 				if (id && userContacts.exists(id)) {
 					const item = webix.copy(userContacts.getItem(id));
-					item.Status = userStatuses.getItem(item.StatusID).Value;
+
+					if (userStatuses.exists(item.StatusID)) {
+						item.Status = userStatuses.getItem(item.StatusID).value;
+					} else {
+						item.Status = "No status";
+					}
 
 					this.$$("userInfoTemplate").parse(item);
 					this.$$("userInfoTemplate").setHTML(this.getTemplate(item));
@@ -185,6 +191,7 @@ export default class userInfoTplView extends JetView {
 
 class FileTableView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		return {
 			rows: [
 				{
@@ -192,17 +199,17 @@ class FileTableView extends JetView {
 					localId: "fileTable",
 					select: true,
 					columns: [
-						{ id: "name", header: "Name", sort: "text", fillspace: true },
-						{ id: "dataChange", header: "Change data", width: 100, format: webix.Date.dateToStr("%d %M %Y"), sort: "date" },
-						{ id: "size", header: "Size", width: 100, sort: "text" },
+						{ id: "name", header: _("Name"), sort: "text", fillspace: true },
+						{ id: "dataChange", header: _("Change data"), width: 100, format: webix.Date.dateToStr("%d %M %Y"), sort: "date" },
+						{ id: "size", header: _("Size"), width: 100, sort: "text" },
 						{ template: "<span class='webix_icon wxi-trash deleteElement'></span>", width: 50 },
 					],
 					scrollX: false,
 					onClick: {
 						"deleteElement": function (e, id) {
 							webix.confirm({
-								title: "Delete",
-								text: "Do You want to delete this file?",
+								title: _("Delete"),
+								text: _("Do You want to delete this file?"),
 								type: "confirm-warning",
 								callback: function (result) {
 									if (result) {
@@ -223,7 +230,7 @@ class FileTableView extends JetView {
 							width: 200,
 							icon: "wxi-download",
 							localId: "uploadBtn",
-							label: "Upload file",
+							label: _("Upload file"),
 							autosend: false,
 							on: {
 								onBeforeFileAdd: (upload) => {
@@ -272,6 +279,7 @@ class FileTableView extends JetView {
 
 class ActivityTableView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		return {
 			id: "activityCell",
 			rows: [
@@ -281,7 +289,7 @@ class ActivityTableView extends JetView {
 					localId: "activityTable",
 					columns: [
 						{ id: "State", header: "", template: "{common.checkbox()}", checkValue: "Open", uncheckValue: "Close", sort: "text", width: 36 },
-						{ id: "TypeID", header: ["", { content: "selectFilter" }], collection: userActivityType, sort: "text", width: 150 },
+						{ id: "TypeID", header: ["", { content: "richSelectFilter" }], collection: userActivityType, sort: "text", width: 150 },
 						{ id: "DueDate", header: ["", { content: "datepickerFilter", inputConfig: { format:webix.Date.dateToStr("%d-%m-%Y") } }], width: 150, format:webix.Date.dateToStr("%d-%m-%Y"), sort: "date" },
 						{ id: "Details", header: ["", { content: "textFilter" }], width: 200, fillspace: true, sort: "text" },
 						{ template: "<span class='webix_icon wxi-pencil editElement'></span>", width: 50 },
@@ -295,8 +303,8 @@ class ActivityTableView extends JetView {
 						},
 						"deleteElement": function (e, id) {
 							webix.confirm({
-								title: "Delete",
-								text: "Do You want to delete this activity?",
+								title: _("Delete"),
+								text: _("Do You want to delete this activity?"),
 								type: "confirm-warning",
 								callback: function (result) {
 									if (result) {
@@ -314,7 +322,7 @@ class ActivityTableView extends JetView {
 						{
 							view: "button",
 							localId: "addActivityBtn",
-							label: "Add activity",
+							label: _("Add activity"),
 							type: "iconButton",
 							icon: "wxi-plus",
 							click: () => {

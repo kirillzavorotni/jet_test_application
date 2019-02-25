@@ -4,6 +4,7 @@ import { userStatuses } from "models/userStatuses";
 
 export default class UserFormView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		return {
 			rows: [
 				{ view: "template", localId: "formTitle", template: "Edit (*add) contact", type: "header", css: "header-app" },
@@ -22,32 +23,27 @@ export default class UserFormView extends JetView {
 							cols: [
 								{
 									rows: [
-										{ view: "text", label: "First name", name: "FirstName" },
-										{ view: "text", label: "Last name", name: "LastName" },
+										{ view: "text", label: _("First name"), name: "FirstName" },
+										{ view: "text", label: _("Last name"), name: "LastName" },
 										{
 											view: "datepicker",
 											name: "StartDate",
-											label: "Joining date",
+											label: _("Joining date"),
 											type: "date",
 											format: webix.Date.dateToStr("%d-%m-%Y"),
 										},
 										{
 											view: "richselect",
-											label: "Status",
+											label: _("Status"),
 											name: "StatusID",
-											suggest: {
-												data: userStatuses,
-												body: {
-													template: "#Value#",
-												}
-											},
+											options: userStatuses,
 										},
-										{ view: "text", label: "Job", name: "Job" },
-										{ view: "text", label: "Company", name: "Company" },
-										{ view: "text", label: "Website", name: "Website" },
+										{ view: "text", label: _("Job"), name: "Job" },
+										{ view: "text", label: _("Company"), name: "Company" },
+										{ view: "text", label: _("Website"), name: "Website" },
 										{
 											view: "textarea",
-											label: "Addres",
+											label: _("Addres"),
 											height: 100,
 											name: "Address",
 										},
@@ -56,13 +52,13 @@ export default class UserFormView extends JetView {
 								},
 								{
 									rows: [
-										{ view: "text", label: "Email", name: "Email" },
-										{ view: "text", label: "Skype", name: "Skype" },
-										{ view: "text", label: "Phone", name: "Phone" },
+										{ view: "text", label: _("Email"), name: "Email" },
+										{ view: "text", label: _("Skype"), name: "Skype" },
+										{ view: "text", label: _("Phone"), name: "Phone" },
 										{
 											view: "datepicker",
 											name: "Birthday",
-											label: "Birthday",
+											label: _("Birthday"),
 											type: "date",
 											format: webix.Date.dateToStr("%d-%m-%Y"),
 										},
@@ -81,7 +77,7 @@ export default class UserFormView extends JetView {
 														{ view: "spacer" },
 														{
 															view: "uploader",
-															label: "Change photo",
+															label: _("Change photo"),
 															accept: "image/jpeg, image/png",
 															autosend: false,
 															multiple: false,
@@ -101,7 +97,7 @@ export default class UserFormView extends JetView {
 															}
 														},
 														{
-															view: "button", label: "Delete photo", css: "userFormbutton", click: () => {
+															view: "button", label: _("Delete photo"), css: "userFormbutton", click: () => {
 																this.$$("userImgTemplate").setValues({ src: "" });
 																this.$$("contactForm").setValues({ Photo: "" }, true);
 															}
@@ -139,7 +135,7 @@ export default class UserFormView extends JetView {
 						{
 							cols: [
 								{
-									view: "button", label: "Cancel", click: () => {
+									view: "button", label: _("Cancel"), click: () => {
 										this.refreshForm();
 										if (this.getParam("mode") === "add") {
 											const firstId = userContacts.getFirstId();
@@ -193,8 +189,9 @@ export default class UserFormView extends JetView {
 	}
 
 	editLabels(label) {
-		this.$$("actionButton").define("label", label);
-		this.$$("formTitle").define("template", `${label} contact`);
+		const _ = this.app.getService("locale")._;
+		this.$$("actionButton").define("label", _(label));
+		this.$$("formTitle").define("template", `${_(label)} ${_("contact")}`);
 		this.$$("actionButton").refresh();
 		this.$$("formTitle").refresh();
 	}

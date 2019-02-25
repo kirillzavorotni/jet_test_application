@@ -3,6 +3,9 @@ import { userContacts } from "models/userContacts";
 
 export default class ContactsView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
+		const format = webix.Date.dateToStr("%d %M %Y");
+
 		const userList = {
 			view: "list",
 			localId: "userList",
@@ -38,6 +41,46 @@ export default class ContactsView extends JetView {
 			cols: [
 				{
 					rows: [
+						{
+							view: "text",
+							localId: "userListFilter",
+							placeholder: _("type to find matching contacts"),
+							keyPressTimeout: 500,
+							on: {
+								onTimedKeyPress: function () {
+									const value = this.getValue().toLowerCase();
+									userContacts.filter(function (obj) {
+										for (let key in obj) {
+											if (key === "Address" ||
+												key === "Company" ||
+												key === "Email" ||
+												key === "FirstName" ||
+												key === "LastName" ||
+												key === "Phone" ||
+												key === "Skype" ||
+												key === "Birthday" ||
+												key === "Job" ||
+												key === "Website") {
+
+												if (typeof obj[key] === "object") {
+													let date = webix.Date.copy(obj[key]);
+													date = format(date);
+													if (date.toString().toLowerCase().indexOf(value) != -1) {
+														return true;
+													}
+												}
+
+												if (obj[key].toString().toLowerCase().indexOf(value) != -1) {
+													return true;
+												}
+
+											}
+										}
+										return false;
+									});
+								},
+							},
+						},
 						userList,
 						{
 							cols: [
@@ -46,7 +89,7 @@ export default class ContactsView extends JetView {
 									view: "button",
 									width: 200,
 									localId: "addButton",
-									label: "Add contact",
+									label: _("Add contact"),
 									type: "iconButton",
 									icon: "wxi-plus",
 									click: () => {

@@ -47,6 +47,12 @@
   line-height: 18px;
 }
 
+.settings-cols-header-text {
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+}
+
 .userFormStyle label {
 	font-size: 11px;
 }
@@ -64,10 +70,6 @@
 .user-info-block__name-text {
 	font-size: 20px;
 	text-align: left;
-}
-
-.webix_layout_line .template-style {
-	margin-left: 77px;
 }
 
 .user-info-wrap {
