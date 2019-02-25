@@ -39,8 +39,8 @@ export default class ActivitiesView extends JetView {
 						{ id: "activityThisMounth", value: _("This Month") },
 					],
 					on: {
-						'onChange': () => {
-							this.$$('active-table').filterByAll();
+						"onChange": () => {
+							this.$$("active-table").filterByAll();
 						}
 					}
 				},
@@ -87,11 +87,11 @@ export default class ActivitiesView extends JetView {
 		this.window = this.ui(UserInfoFormView);
 
 		this.app.attachEvent("switchFilterValue", () => {
-			this.$$('tabbarFilter').setValue("activityAll");
+			this.$$("tabbarFilter").setValue("activityAll");
 		});
 
-		this.$$('active-table').registerFilter(
-			this.$$('tabbarFilter'),
+		this.$$("active-table").registerFilter(
+			this.$$("tabbarFilter"),
 			{
 				compare: function (value, filter, item) {
 					if (filter === "activityNotCompleted") {
