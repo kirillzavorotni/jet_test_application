@@ -5,6 +5,7 @@ import { userActivityType } from "models/userActivityType";
 
 export default class UserInfoWindowFormView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 		return {
 			view: "window",
 			localId: "activityWindow",
@@ -22,13 +23,13 @@ export default class UserInfoWindowFormView extends JetView {
 				elements: [
 					{
 						view: "textarea",
-						label: "Details",
+						label: _("Details"),
 						height: 100,
 						name: "Details",
 					},
 					{
 						view: "richselect",
-						label: "Type",
+						label: _("Type"),
 						name: "TypeID",
 						suggest: {
 							data: userActivityType,
@@ -40,7 +41,7 @@ export default class UserInfoWindowFormView extends JetView {
 					{
 						view: "richselect",
 						localId: "chooseContactElem",
-						label: "Contact",
+						label: _("Contact"),
 						name: "ContactID",
 						suggest: {
 							data: userContacts,
@@ -56,21 +57,21 @@ export default class UserInfoWindowFormView extends JetView {
 							{
 								view: "datepicker",
 								name: "Date",
-								label: "Date",
+								label: _("Date"),
 								type: "date",
 								format: webix.Date.dateToStr("%d-%m-%Y"),
 							},
 							{
 								view: "datepicker",
 								name: "Time",
-								label: "Time",
+								label: _("Time"),
 								type: "time",
 							},
 						],
 					},
 					{
 						view: "checkbox",
-						labelRight: "Completed",
+						labelRight: _("Completed"),
 						name: "State",
 						checkValue: "Open",
 						uncheckValue: "Close",
@@ -82,7 +83,7 @@ export default class UserInfoWindowFormView extends JetView {
 								view: "button",
 								localId: "addSaveButton",
 								type: "form",
-								label: "Add",
+								label: _("Add"),
 								width: 130,
 								click: () => {
 									if (this.$$("userForm").validate()) {
@@ -99,12 +100,13 @@ export default class UserInfoWindowFormView extends JetView {
 										}
 
 										this.closeWindow();
+										this.app.callEvent("switchFilterValue");
 									}
 								}
 							},
 							{
 								view: "button",
-								label: "Cancel",
+								label: _("Cancel"),
 								width: 130,
 								click: () => {
 									this.closeWindow();
@@ -148,9 +150,10 @@ export default class UserInfoWindowFormView extends JetView {
 	}
 
 	changeLabels(newLabelText) {
-		this.$$("windowHeader").define("template", newLabelText);
+		const _ = this.app.getService("locale")._;
+		this.$$("windowHeader").define("template", _(newLabelText));
 		this.$$("windowHeader").refresh();
-		this.$$("addSaveButton").define("label", newLabelText);
+		this.$$("addSaveButton").define("label", _(newLabelText));
 		this.$$("addSaveButton").refresh();
 	}
 
