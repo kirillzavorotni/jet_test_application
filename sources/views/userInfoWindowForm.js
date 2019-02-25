@@ -31,12 +31,7 @@ export default class UserInfoWindowFormView extends JetView {
 						view: "richselect",
 						label: _("Type"),
 						name: "TypeID",
-						suggest: {
-							data: userActivityType,
-							body: {
-								template: "#Value#",
-							}
-						},
+						options: userActivityType,
 					},
 					{
 						view: "richselect",

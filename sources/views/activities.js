@@ -50,7 +50,7 @@ export default class ActivitiesView extends JetView {
 					localId: "active-table",
 					columns: [
 						{ id: "State", header: "", template: "{common.checkbox()}", checkValue: "Open", uncheckValue: "Close", sort: "text", width: 36 },
-						{ id: "TypeID", header: [_("Active type"), { content: "selectFilter" }], collection: userActivityType, sort: "text", width: 100 },
+						{ id: "TypeID", header: [_("Active type"), { content: "richSelectFilter" }], options: userActivityType, sort: "text", width: 150 },
 						{ id: "DueDate", header: [_("Due date"), { content: "datepickerFilter", inputConfig: { timepicker: true, format: webix.Date.dateToStr("%d-%m-%Y") } }], width: 150, format: webix.Date.dateToStr("%d-%m-%Y %H:%i"), sort: "date" },
 						{ id: "Details", header: [_("Details"), { content: "textFilter" }], width: 300, fillspace: true, sort: "text" },
 						{ id: "ContactID", header: [_("Contact"), { content: "selectFilter" }], width: 200, collection: userContacts, sort: "text" },
@@ -94,51 +94,33 @@ export default class ActivitiesView extends JetView {
 			this.$$("tabbarFilter"),
 			{
 				compare: function (value, filter, item) {
+					const date = new Date();
 					if (filter === "activityNotCompleted") {
 						return item.State === "Close";
 					} else if (filter === "activityCompiled") {
 						return item.State === "Open";
 					} else if (filter === "activityOverDue") {
-						return new Date() - item.DueDate.getTime() > 0;
+						return (date - item.DueDate.getTime() > 0) && (item.State === "Close");
 					} else if (filter === "activityToday") {
-						const dateFrom = new Date();
-						dateFrom.setHours(0, 0, 0, 0);
-
-						const dateTo = new Date();
-						dateTo.setHours(23, 59, 59, 59);
-
-						return item.DueDate >= dateFrom && item.DueDate < dateTo;
+						return item.DueDate >= date.setHours(0, 0, 0, 0) && item.DueDate < date.setHours(23, 59, 59, 59);
 					} else if (filter === "activityTommorow") {
-						const today = new Date().getDate();
-						const tommorow = new Date(new Date().setDate(today + 1));
-						const afterTomorrow = new Date(new Date().setDate(today + 2));
 
-						tommorow.setHours(0, 0, 0, 0);
-						afterTomorrow.setHours(0, 0, 0, 0);
-
+						const tommorow = webix.Date.dayStart(webix.Date.add(date, 1, "day", true));
+						const afterTomorrow = new Date(webix.Date.copy(tommorow).setHours(23, 59, 59));
 						return item.DueDate >= tommorow && item.DueDate < afterTomorrow;
+
 					} else if (filter === "activityThisWeek") {
-						const date = new Date();
-						const today = new Date().getDate();
 
-						const currentWeekDay = (date.getDay() === 0) ? 7 : date.getDay();
-						let startWeekDay = new Date(new Date().setHours(0, 0, 0, 0));
-						startWeekDay = new Date(startWeekDay.setDate(today - (currentWeekDay - 1)));
+						const currentFirstWeekDay = webix.Date.add(webix.Date.weekStart(date), 1, "day", true);
+						const currentLastWeekDay = webix.Date.add(currentFirstWeekDay, 1, "week", true);
+						return item.DueDate >= currentFirstWeekDay && item.DueDate <= currentLastWeekDay;
 
-						let finalWeekDay = new Date(new Date().setHours(23, 59, 59, 59));
-						finalWeekDay = new Date(finalWeekDay.setDate(today + (7 - currentWeekDay)));
-
-						return item.DueDate >= startWeekDay && item.DueDate <= finalWeekDay;
 					} else if (filter === "activityThisMounth") {
-						let startMonthDay = new Date(new Date().setDate(1)).setHours(0, 0, 0, 0);
-						startMonthDay = new Date(startMonthDay);
 
-						const nextMonth = startMonthDay.getMonth() + 1;
-
-						let finishMonthDay = new Date(new Date().setMonth(nextMonth, 1)).setHours(0, 0, 0, 0);
-						finishMonthDay = new Date(finishMonthDay);
-
+						const startMonthDay = webix.Date.monthStart(date);
+						const finishMonthDay = webix.Date.add(startMonthDay, 1, "month", true);
 						return item.DueDate >= startMonthDay && item.DueDate < finishMonthDay;
+
 					} else {
 						return true;
 					}

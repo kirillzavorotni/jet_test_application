@@ -45,6 +45,7 @@ export default {
 	"contact": "контакт",
 	"All": "Все",
 	"Not completed": "Не заверш.",
+	"Completed" : "Завершено",
 	"Over Due": "Просрочено",
 	"Today": "Сегодня",
 	"Tommorow": "Завтра",

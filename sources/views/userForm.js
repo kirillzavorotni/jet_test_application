@@ -36,12 +36,7 @@ export default class UserFormView extends JetView {
 											view: "richselect",
 											label: _("Status"),
 											name: "StatusID",
-											suggest: {
-												data: userStatuses,
-												body: {
-													template: "#Value#",
-												}
-											},
+											options: userStatuses,
 										},
 										{ view: "text", label: _("Job"), name: "Job" },
 										{ view: "text", label: _("Company"), name: "Company" },

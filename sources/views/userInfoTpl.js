@@ -130,9 +130,9 @@ export default class userInfoTplView extends JetView {
 					const item = webix.copy(userContacts.getItem(id));
 
 					if (userStatuses.exists(item.StatusID)) {
-						item.Status = userStatuses.getItem(item.StatusID).Value;
+						item.Status = userStatuses.getItem(item.StatusID).value;
 					} else {
-						item.Status = "no status";
+						item.Status = "No status";
 					}
 
 					this.$$("userInfoTemplate").parse(item);
@@ -289,7 +289,7 @@ class ActivityTableView extends JetView {
 					localId: "activityTable",
 					columns: [
 						{ id: "State", header: "", template: "{common.checkbox()}", checkValue: "Open", uncheckValue: "Close", sort: "text", width: 36 },
-						{ id: "TypeID", header: ["", { content: "selectFilter" }], collection: userActivityType, sort: "text", width: 150 },
+						{ id: "TypeID", header: ["", { content: "richSelectFilter" }], collection: userActivityType, sort: "text", width: 150 },
 						{ id: "DueDate", header: ["", { content: "datepickerFilter", inputConfig: { format:webix.Date.dateToStr("%d-%m-%Y") } }], width: 150, format:webix.Date.dateToStr("%d-%m-%Y"), sort: "date" },
 						{ id: "Details", header: ["", { content: "textFilter" }], width: 200, fillspace: true, sort: "text" },
 						{ template: "<span class='webix_icon wxi-pencil editElement'></span>", width: 50 },

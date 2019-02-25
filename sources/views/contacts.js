@@ -60,7 +60,6 @@ export default class ContactsView extends JetView {
 												key === "Skype" ||
 												key === "Birthday" ||
 												key === "Job" ||
-												key === "Status" ||
 												key === "Website") {
 
 												if (typeof obj[key] === "object") {
